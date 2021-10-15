@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node ./src/server/index.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-dev": "webpack server  --config webpack.dev.js --open"
@@ -13,7 +13,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "axios": "^0.23.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -30,11 +29,13 @@
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^6.4.0",
     "html-webpack-plugin": "^4.5.2",
+    "jest": "^27.2.5",
     "node-sass": "^6.0.1",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "sass-loader": "^12.2.0",
     "style-loader": "^3.3.0",
     "terser-webpack-plugin": "^5.2.4",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "workbox-webpack-plugin": "^6.3.0"
   }
 }

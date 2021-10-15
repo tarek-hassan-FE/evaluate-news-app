@@ -2,7 +2,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // console.log(`Your API key is ${process.env.API_KEY}`);
-// const mockAPIResponse = require('./mockAPI.js')
 var path = require('path')
 const express = require('express')
 var cors = require('cors')
@@ -48,7 +47,7 @@ app.post('/NLP', (req, res)=> {
           body: response.json()
         }))
         .then(({ status, body }) => {
-            body.then(data => {console.log(data);res.send(data)})
+            body.then(data => {res.send(data)})
         })
         .catch(error => console.log('error', error));
 
