@@ -8,6 +8,11 @@ module.exports = {
     mode: 'development',
     devtool: 'source-map',
     stats: 'verbose',
+    output: {
+        libraryTarget: 'var',
+        library: 'Client',
+        globalObject: 'this'
+    },
     module: {
         rules: [
             {
@@ -16,9 +21,9 @@ module.exports = {
                 loader: "babel-loader"
             },
             {
-                test: '/\.scss$/',
+                test:  /\.scss$/,
                 exclude: /node_modules/,
-               use: ['style-loader', 'css-loader', 'sass-loader']
+                use: [ 'style-loader', 'css-loader', 'sass-loader' ]
             },
         ]
     },
@@ -37,14 +42,4 @@ module.exports = {
             protectWebpackAssets: false
         })
     ],
-    // resolveLoader: {
-    //     modules: [
-    //         path.join(__dirname, 'node_modules')
-    //     ]
-    // },
-    // resolve: {
-    //     modules: [
-    //         path.join(__dirname, 'node_modules')
-    //     ]
-    // }
 }

@@ -1,11 +1,18 @@
 const dotenv = require('dotenv');
 dotenv.config();
-console.log(`Your API key is ${process.env.API_KEY}`);
+
+// console.log(`Your API key is ${process.env.API_KEY}`);
+// const mockAPIResponse = require('./mockAPI.js')
 var path = require('path')
 const express = require('express')
-const mockAPIResponse = require('./mockAPI.js')
+var cors = require('cors')
+var FormData = require('form-data');
+const bodyParser = require('body-parser');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express()
+app.use(express.json());
+app.use(cors())
 
 app.use(express.static('dist'))
 
@@ -18,9 +25,32 @@ app.get('/', function (req, res) {
 
 // designates what port the app will listen to for incoming requests
 app.listen(3000, function () {
-    console.log('Example app listening on port 8080!')
+    console.log('Example app listening on port 3000!')
 })
 
-app.get('/test', function (req, res) {
-    res.send(mockAPIResponse)
+
+app.post('/NLP', (req, res)=> {
+    const formdata = new FormData();
+    formdata.append("key","68026594a4a5205e45709879a77f7229");
+    formdata.append("url", req.body.url);
+    formdata.append("lang", "auto"); 
+    console.log(req.body)
+
+    const requestOptions = {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow'
+      };
+      
+      fetch("https://api.meaningcloud.com/sentiment-2.1", requestOptions)
+        .then(response => ({
+          status: response.status, 
+          body: response.json()
+        }))
+        .then(({ status, body }) => {
+            body.then(data => {console.log(data);res.send(data)})
+        })
+        .catch(error => console.log('error', error));
+
+    
 })
