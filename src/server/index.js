@@ -2,12 +2,12 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // console.log(`Your API key is ${process.env.API_KEY}`);
-var path = require('path')
+const path = require('path')
 const express = require('express')
-var cors = require('cors')
-var FormData = require('form-data');
-const bodyParser = require('body-parser');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const cors = require('cors')
+const https = require('follow-redirects').https;
+const fs = require('fs');
+
 
 const app = express()
 app.use(express.json());
@@ -18,8 +18,8 @@ app.use(express.static('dist'))
 console.log(__dirname)
 
 app.get('/', function (req, res) {
-    // res.sendFile('dist/index.html')
-    res.sendFile(path.resolve('src/client/views/index.html'))
+    res.sendFile('dist/index.html')
+    // res.sendFile(path.resolve('src/client/views/index.html'))
 })
 
 // designates what port the app will listen to for incoming requests
@@ -29,27 +29,32 @@ app.listen(3000, function () {
 
 
 app.post('/NLP', (req, res)=> {
-    const formdata = new FormData();
-    formdata.append("key","68026594a4a5205e45709879a77f7229");
-    formdata.append("url", req.body.url);
-    formdata.append("lang", "auto"); 
-    console.log(req.body)
+   
+    let options = {
+      'method': 'POST',
+      'hostname': 'api.meaningcloud.com',
+      'path': `/sentiment-2.1?key=${process.env.API_KEY}&lang=auto&url=${req.body.url}`,
+      'headers': {
+      },
+      'maxRedirects': 20
+    };
 
-    const requestOptions = {
-        method: 'POST',
-        body: formdata,
-        redirect: 'follow'
-      };
-      
-      fetch("https://api.meaningcloud.com/sentiment-2.1", requestOptions)
-        .then(response => ({
-          status: response.status, 
-          body: response.json()
-        }))
-        .then(({ status, body }) => {
-            body.then(data => {res.send(data)})
-        })
-        .catch(error => console.log('error', error));
-
-    
+    let requ = https.request(options, function (response) {
+      let chunks = [];
+  
+      response.on("data", function (chunk) {
+        chunks.push(chunk);
+      });
+  
+      response.on("end", function (chunk) {
+        let body = Buffer.concat(chunks);
+        res.send(body.toString());
+      });
+  
+      response.on("error", function (error) {
+        console.error(error);
+      });
+    });
+  
+    requ.end();
 })
